@@ -1,0 +1,33 @@
+name: Validate skills
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml
+      - name: Validate every skill
+        run: |
+          python3 scripts/validate_skills.py skills > report.json
+          python3 - <<'EOF'
+          import json, sys
+          r = json.load(open("report.json"))["results"]
+          # Example links inside skill docs (e.g. ./src/billing/GLOSSARY.md) are
+          # illustrations, not real files, so only hard frontmatter errors fail CI.
+          bad = {k: [i for i in v["issues"] if "broken link" not in i] for k, v in r.items()}
+          bad = {k: v for k, v in bad.items() if v}
+          for k, v in bad.items():
+              print(f"::error::{k}: {'; '.join(v)}")
+          print(f"{len(r)} skills checked, {len(bad)} with errors")
+          sys.exit(1 if bad else 0)
+          EOF
