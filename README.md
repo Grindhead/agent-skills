@@ -50,6 +50,8 @@ To take only some of them, install from the upstream repos with [skills.sh](http
 
 ## Keeping it healthy
 
+The latest smoke test results are in [docs/smoke-test-2026-10-06.md](docs/smoke-test-2026-10-06.md).
+
 `scripts/validate_skills.py` checks every skill: valid frontmatter, a kebab-case `name` that matches its folder, a description under 1024 characters, and relative links that resolve. CI runs it on every push.
 
 ```bash
