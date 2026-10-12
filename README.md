@@ -61,3 +61,10 @@ python3 scripts/validate_skills.py skills
 Only skills listed in `.gitignore` as `!skills/<name>/` are published. Agents like Cursor install their own built-in skills into `~/.agents/skills`, and those stay out of this repo. To publish a new skill, add a line for it.
 
 To pull upstream changes for the skills installed with skills.sh, run `npx skills update -g`, then check the renamed pstack skills by hand.
+
+
+### Validation and audit contracts
+
+The validator always prints JSON. Its default exit status is zero for a completed report; `--strict` exits 1 for hard issues, and `--strict-warnings` also fails for warnings. Explicit inline `/skill` invocations and “use/run/invoke /skill” prose are checked against installed skill folders. Code fences and arbitrary bold prose are not treated as invocations. Existing CI intentionally filters illustrative broken links from its report.
+
+The worktree audit is read-only. `safe` requires positive main ancestry or a MERGED PR, and never includes unpushed commits. CLOSED unmerged PRs require review. Python3 supplies portable transcript timestamps; full paths with spaces are retained. Run `python3 -m unittest discover -s tests -v` for integration regressions.
